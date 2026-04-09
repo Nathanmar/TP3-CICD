@@ -1,18 +1,18 @@
-import { ValidationHandler } from './ValidationHandler.js';
+import { ValidationHandler } from './ValidationHandler.js'
 
 export class TypeSupportedHandler extends ValidationHandler {
-    private static readonly SUPPORTED_TYPES = ['string', 'number', 'uuid', 'name'];
+  private readonly supportedTypes = ['string', 'number', 'uuid', 'name']
 
-    protected validate(request: any): string | null {
-        const schema = request.schema;
+  protected validate(request: unknown): string | null {
+    const data = request as Record<string, unknown>
+    const schema = data.schema as Record<string, string>
 
-        for (const key in schema) {
-            const type = schema[key];
-            if (!TypeSupportedHandler.SUPPORTED_TYPES.includes(type.toLowerCase())) {
-                return `Unsupported type '${type}' for field '${key}'. Supported types are: ${TypeSupportedHandler.SUPPORTED_TYPES.join(', ')}.`;
-            }
-        }
-
-        return null;
+    for (const field in schema) {
+      if (!this.supportedTypes.includes(schema[field].toLowerCase())) {
+        return `Unsupported type '${schema[field]}' for field '${field}'. Supported types: ${this.supportedTypes.join(', ')}.`
+      }
     }
+
+    return null
+  }
 }
