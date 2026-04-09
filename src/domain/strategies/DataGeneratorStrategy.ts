@@ -1,3 +1,3 @@
 export interface DataGeneratorStrategy {
-    generate(): any;
+  generate(): unknown
 }

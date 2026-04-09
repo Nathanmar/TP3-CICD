@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { MockController } from '../controllers/MockController.js';
+import { Router } from 'express'
+import { MockController } from '../controllers/MockController.js'
 
-const router = Router();
-const mockController = new MockController();
+const router = Router()
+const mockController = new MockController()
 
-router.post('/mock', mockController.handleMockRequest);
+router.post('/mock', mockController.handleMockRequest)
 
-export default router;
+export default router
