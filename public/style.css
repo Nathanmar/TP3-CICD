@@ -57,7 +57,8 @@ main {
     }
 }
 
-.config-card, .result-card {
+.config-card,
+.result-card {
     background: var(--card-bg);
     padding: 2rem;
     border-radius: 1rem;
@@ -83,7 +84,8 @@ h2 {
     align-items: center;
 }
 
-input, select {
+input,
+select {
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--border-color);
     border-radius: 0.5rem;
@@ -93,7 +95,8 @@ input, select {
     background: white;
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border-color: var(--primary-color);
     ring: 2px solid var(--primary-color);
 }
