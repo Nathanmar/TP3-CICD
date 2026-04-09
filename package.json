@@ -1,6 +1,7 @@
 {
     "name": "tp3-cicd-data-mock",
     "version": "1.0.0",
+    "type": "module",
     "description": "Data Mock REST API with Clean Architecture",
     "main": "dist/index.js",
     "scripts": {
