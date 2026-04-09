@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mock Tool - Générateur de données</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Mock Tool</h1>
+            <p>Générez des données de test robustes en un clic.</p>
+        </header>
+
+        <main>
+            <section class="config-card">
+                <h2>Configuration du Schéma</h2>
+                <div id="fields-container">
+                    <!-- Fields will be added here -->
+                </div>
+                <button id="add-field-btn" class="btn secondary">+ Ajouter un champ</button>
+
+                <div class="count-input">
+                    <label for="count">Nombre d'entrées :</label>
+                    <input type="number" id="count" value="10" min="1" max="1000">
+                </div>
+
+                <button id="generate-btn" class="btn primary">Générer les données</button>
+            </section>
+
+            <section class="result-card">
+                <div class="result-header">
+                    <h2>Résultat JSON</h2>
+                    <button id="copy-btn" class="btn small">Copier</button>
+                </div>
+                <pre id="result-display"><code>// Les données générées s'afficheront ici...</code></pre>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Data Mock API - TP3 CICD</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

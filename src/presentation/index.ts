@@ -2,7 +2,9 @@ import express from 'express';
 import mockRoutes from './routes/MockRoutes.js';
 
 const app = express();
+// Apply Middleware
 app.use(express.json());
+app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
