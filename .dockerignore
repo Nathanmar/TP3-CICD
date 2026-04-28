@@ -1,20 +1,17 @@
-# Dependances Node.js
+# Dependencies
 node_modules/
 
-# Fichiers Git
+# Git
 .git/
 .gitignore
 
-# Variables d'environnement (ne jamais inclure dans l'image)
+# Environment variables
 .env
 .env.*
 !.env.example
 
-# Sources TypeScript (on copie uniquement le dist/ compile)
-# Note : pas besoin d'exclure src/ ici car le multi-stage ne le copie pas dans le stage final
-# mais on l'exclut quand meme pour la clarte et les builds monoetage eventuels
-
-# Fichiers de tests (inutiles en production)
+# Source code
+# Tests
 tests/
 test-results/
 playwright-report/
@@ -26,7 +23,7 @@ README.md
 PROJECT_STATUS.md
 commands.md
 
-# Configuration des outils de dev (inutile en prod)
+# Development configuration
 .husky/
 .prettierrc
 eslint.config.js
@@ -34,10 +31,10 @@ jest.config.js
 playwright.config.ts
 sonar-project.properties
 
-# Builds et artifacts
+# Build artifacts
 dist/
 
-# IDE et OS
+# OS and IDE
 .vscode/
 .idea/
 *.DS_Store

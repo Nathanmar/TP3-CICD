@@ -8,18 +8,18 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Installation de TOUTES les dependances pour compiler
+# Install all dependencies required for the build
 RUN npm ci
 
 COPY src/ ./src/
 RUN npm run build
 
-# On nettoie les dependances de developpement directement dans le builder
+# Remove development dependencies
 RUN npm prune --omit=dev
 
 # ─────────────────────────────────────────────────────────────────────────────
 # STAGE 2 — PRODUCTION
-# Image ultra-legere : Alpine pure + juste l'executable Node.js (sans npm/yarn)
+# Minimal image with only Node.js runtime
 # ─────────────────────────────────────────────────────────────────────────────
 FROM alpine:3.19 AS production
 
@@ -29,10 +29,10 @@ LABEL description="Data Mock REST API"
 
 WORKDIR /app
 
-# Installation de Node.js (sans npm) pour reduire la taille
+# Install Node.js runtime without npm
 RUN apk add --no-cache nodejs
 
-# On recupere les node_modules de prod, le JS compile, le package.json (pour type: module) et les statiques
+# Copy production artifacts from builder
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json

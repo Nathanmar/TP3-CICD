@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["main", "develop"]
 
-# Evite de faire tourner plusieurs fois le meme workflow sur la meme branche
+# Prevent concurrent runs on the same branch
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -14,7 +14,7 @@ concurrency:
 jobs:
   # ─────────────────────────────────────────────
   # JOB 1 : Lint & Formatting
-  # Double filet de securite : verifie ce que husky/lint-staged fait en local
+  # Double check formatting and linting
   # ─────────────────────────────────────────────
   lint:
     name: Lint & Format Check
@@ -41,7 +41,7 @@ jobs:
 
   # ─────────────────────────────────────────────
   # JOB 2 : Tests unitaires & integration + couverture
-  # Verifie le seuil de 70% de couverture
+  # Enforce 70% coverage threshold
   # ─────────────────────────────────────────────
   test:
     name: Unit & Integration Tests
@@ -109,7 +109,7 @@ jobs:
   # ─────────────────────────────────────────────
   # JOB 4 : Analyse statique SonarCloud
   # Quality Gate : 0 bugs, 0 vulnerabilites, duplication < 3%, couverture >= 70%
-  # S'execute apres les tests pour avoir le rapport de couverture
+  # Requires test coverage report
   # ─────────────────────────────────────────────
   sonarcloud:
     name: SonarCloud Analysis
@@ -120,7 +120,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Necessaire pour que SonarCloud puisse analyser l'historique git (blame)
+          # Required for SonarCloud blame information
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -132,7 +132,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests with coverage (pour lcov.info)
+      - name: Run tests with coverage
         run: npm run test:ci
 
       - name: SonarCloud Scan
@@ -143,12 +143,12 @@ jobs:
 
   # ─────────────────────────────────────────────
   # JOB 5 : Scan de securite des dependances (Snyk)
-  # Le pipeline echoue si une vulnerabilite CRITIQUE est detectee
+  # Fails pipeline on CRITICAL vulnerabilities
   # ─────────────────────────────────────────────
   security:
     name: Security Scan (Snyk)
     runs-on: ubuntu-latest
-    # S'execute en parallele de sonarcloud, independamment des tests
+    # Runs in parallel with sonarcloud
     needs: [lint]
 
     steps:
@@ -169,7 +169,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # Echoue le pipeline si une vulnerabilite HIGH ou CRITICAL est detectee
+          # Fail on HIGH or CRITICAL vulnerabilities
           args: --severity-threshold=high
 
       - name: Upload Snyk results as artifact
@@ -182,8 +182,7 @@ jobs:
 
   # ─────────────────────────────────────────────
   # JOB 6 : Build de l'image Docker
-  # Valide que le Dockerfile compile correctement
-  # S'execute apres le lint (code valide = pas la peine de builder)
+  # Validates Dockerfile compilation
   # ─────────────────────────────────────────────
   docker:
     name: Docker Build
@@ -202,12 +201,12 @@ jobs:
         with:
           context: .
           push: false
-          # On tag avec le SHA du commit pour la tracabilite
+          # Tag with commit SHA
           tags: data-mock:${{ github.sha }}
-          # Cache entre les runs pour accelerer les builds suivants
+          # Use GitHub Actions cache
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # On exporte l'image pour que Trivy puisse la scanner
+          # Export image for Trivy scan
           load: true
 
       - name: Display image size
@@ -215,8 +214,7 @@ jobs:
 
   # ─────────────────────────────────────────────
   # JOB 7 : Scan de vulnerabilites de l'image Docker (Trivy)
-  # Scanne l'image finale pour les CVE dans l'OS et les librairies
-  # Echoue si une vulnerabilite CRITIQUE est detectee
+  # Scans image for OS and library CVEs
   # ─────────────────────────────────────────────
   trivy:
     name: Trivy Image Scan
@@ -244,13 +242,13 @@ jobs:
         with:
           image-ref: data-mock:${{ github.sha }}
           format: table
-          # Le pipeline echoue sur les vulnerabilites CRITIQUES dans l'image Docker
+          # Fail on CRITICAL vulnerabilities
           exit-code: "1"
           severity: CRITICAL
-          # Ignorer les vuln sans correctif disponible (pour eviter les faux positifs bloquants)
+          # Ignore unfixed vulnerabilities
           ignore-unfixed: true
 
-      - name: Run Trivy - rapport complet SARIF (sans bloquer)
+      - name: Run Trivy - full SARIF report
         uses: aquasecurity/trivy-action@master
         if: always()
         with:
