@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Source code
+# Tests
+tests/
+test-results/
+playwright-report/
+coverage/
+
+# Documentation
+docs/
+README.md
+PROJECT_STATUS.md
+commands.md
+
+# Development configuration
+.husky/
+.prettierrc
+eslint.config.js
+jest.config.js
+playwright.config.ts
+sonar-project.properties
+
+# Build artifacts
+dist/
+
+# OS and IDE
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db

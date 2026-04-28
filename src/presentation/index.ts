@@ -8,6 +8,11 @@ app.use(express.static('public'))
 
 const PORT = process.env.PORT || 3000
 
+// Health check endpoint — utilise par le HEALTHCHECK Docker
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' })
+})
+
 // Apply Routes
 app.use('/api', mockRoutes)
 
