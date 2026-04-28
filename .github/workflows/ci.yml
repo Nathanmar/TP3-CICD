@@ -203,7 +203,7 @@ jobs:
           context: .
           push: false
           # On tag avec le SHA du commit pour la tracabilite
-          tags: tp3-cicd:${{ github.sha }}
+          tags: data-mock:${{ github.sha }}
           # Cache entre les runs pour accelerer les builds suivants
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -211,7 +211,7 @@ jobs:
           load: true
 
       - name: Display image size
-        run: docker image inspect tp3-cicd:${{ github.sha }} --format='Image size: {{.Size}} bytes'
+        run: docker images data-mock:${{ github.sha }}
 
   # ─────────────────────────────────────────────
   # JOB 7 : Scan de vulnerabilites de l'image Docker (Trivy)
@@ -235,14 +235,14 @@ jobs:
         with:
           context: .
           push: false
-          tags: tp3-cicd:${{ github.sha }}
+          tags: data-mock:${{ github.sha }}
           cache-from: type=gha
           load: true
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: tp3-cicd:${{ github.sha }}
+          image-ref: data-mock:${{ github.sha }}
           format: table
           # Le pipeline echoue sur les vulnerabilites CRITIQUES dans l'image Docker
           exit-code: "1"
@@ -254,7 +254,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: always()
         with:
-          image-ref: tp3-cicd:${{ github.sha }}
+          image-ref: data-mock:${{ github.sha }}
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
