@@ -2,9 +2,14 @@ name: CI - Quality Gates
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main", "develop"]
   pull_request:
-    branches: ["**"]
+    branches: ["main", "develop"]
+
+# Evite de faire tourner plusieurs fois le meme workflow sur la meme branche
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # ─────────────────────────────────────────────
@@ -164,8 +169,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          # Echoue le pipeline UNIQUEMENT si une vulnerabilite critique est detectee
-          # Les severites sont : low, medium, high, critical
+          # Echoue le pipeline si une vulnerabilite HIGH ou CRITICAL est detectee
           args: --severity-threshold=high
 
       - name: Upload Snyk results as artifact
