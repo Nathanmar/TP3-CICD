@@ -15,7 +15,7 @@ export default {
   },
   testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/'],
   collectCoverage: true,
-  coverageReporters: ['text', 'text-summary'],
+  coverageReporters: ['text', 'text-summary', 'lcov'],
   coverageDirectory: 'coverage',
   coverageThreshold: {
     global: {
