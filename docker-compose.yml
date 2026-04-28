@@ -1,0 +1,32 @@
+services:
+  # ─────────────────────────────────────────────
+  # Service principal : API Data Mock
+  # ─────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: data-mock-app
+    ports:
+      - "${PORT:-3001}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - PORT=${PORT:-3000}
+    env_file:
+      - .env.example
+    # Redemarrage automatique si le container crash (sauf si arret volontaire)
+    restart: unless-stopped
+    networks:
+      - app-network
+    # Healthcheck coherent avec le Dockerfile
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+networks:
+  app-network:
+    driver: bridge

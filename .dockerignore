@@ -1,0 +1,44 @@
+# Dependances Node.js
+node_modules/
+
+# Fichiers Git
+.git/
+.gitignore
+
+# Variables d'environnement (ne jamais inclure dans l'image)
+.env
+.env.*
+!.env.example
+
+# Sources TypeScript (on copie uniquement le dist/ compile)
+# Note : pas besoin d'exclure src/ ici car le multi-stage ne le copie pas dans le stage final
+# mais on l'exclut quand meme pour la clarte et les builds monoetage eventuels
+
+# Fichiers de tests (inutiles en production)
+tests/
+test-results/
+playwright-report/
+coverage/
+
+# Documentation
+docs/
+README.md
+PROJECT_STATUS.md
+commands.md
+
+# Configuration des outils de dev (inutile en prod)
+.husky/
+.prettierrc
+eslint.config.js
+jest.config.js
+playwright.config.ts
+sonar-project.properties
+
+# Builds et artifacts
+dist/
+
+# IDE et OS
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db

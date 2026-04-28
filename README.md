@@ -1,4 +1,4 @@
-# Data Mock API - TP3 CICD
+# Data Mock API
 
 Ce projet est une API REST de génération de données de test (Mock Data) développée en **Node.js** avec **TypeScript**. Il suit les principes de la **Clean Architecture** et utilise plusieurs patrons de conception (Design Patterns) pour assurer la flexibilité et la maintenabilité.
 
