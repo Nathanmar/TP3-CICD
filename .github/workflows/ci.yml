@@ -287,6 +287,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Set lowercase owner
+        id: owner
+        run: echo "value=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -300,11 +304,10 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/data-mock:latest
-            ghcr.io/${{ github.repository_owner }}/data-mock:${{ github.sha }}
+            ghcr.io/${{ steps.owner.outputs.value }}/data-mock:latest
+            ghcr.io/${{ steps.owner.outputs.value }}/data-mock:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Image published
-        run: |
-          echo "Image pushed to ghcr.io/${{ github.repository_owner }}/data-mock:${{ github.sha }}"
+        run: echo "Image pushed to ghcr.io/${{ steps.owner.outputs.value }}/data-mock:${{ github.sha }}"
