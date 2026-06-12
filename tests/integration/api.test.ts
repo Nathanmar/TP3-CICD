@@ -1,11 +1,5 @@
 import request from 'supertest'
-import express from 'express'
-import mockRoutes from '../../src/presentation/routes/MockRoutes.js'
-
-// Setup a test app
-const app = express()
-app.use(express.json())
-app.use('/api', mockRoutes)
+import app from '../../src/presentation/app.js'
 
 describe('API Integration Tests (POST /api/mock)', () => {
   it('should return 200 and generated data when request is valid', async () => {
@@ -72,5 +66,28 @@ describe('API Integration Tests (POST /api/mock)', () => {
     // Assert
     expect(response.status).toBe(400)
     expect(response.body.error).toMatch(/Unsupported type 'invalid_type'/)
+  })
+})
+
+describe('Health & Metrics Endpoints', () => {
+  it('GET /health should return 200 with status ok', async () => {
+    // Arrange / Act
+    const response = await request(app).get('/health')
+
+    // Assert
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual({ status: 'ok' })
+  })
+
+  it('GET /metrics should return 200 with expected fields', async () => {
+    // Arrange / Act
+    const response = await request(app).get('/metrics')
+
+    // Assert
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty('uptime_seconds')
+    expect(response.body).toHaveProperty('version')
+    expect(response.body).toHaveProperty('timestamp')
+    expect(typeof response.body.uptime_seconds).toBe('number')
   })
 })
